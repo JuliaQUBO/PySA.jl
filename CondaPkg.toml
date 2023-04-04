@@ -1,0 +1,8 @@
+channels = ["anaconda", "conda-forge"]
+
+[deps]
+python = ">=3.8,<3.11"
+
+[pip.deps]
+numpy = ">=1.20.0"
+pysa  = "@ git+https://github.com/nasa/pysa"
