@@ -38,4 +38,7 @@ for i = 1:result_count(model)
 end
 ```
 
+**Note**: _The PySA wrapper for Julia is not officially supported by the National Aeronautics and Space Administration. If you are interested in official support for Julia from NASA, let them know!_
+
+
 **Note**: _If you are using `PySA.jl` in your project, we recommend you to include the `.CondaPkg` entry in your `.gitignore` file. The `PythonCall` module will place a lot of files in this folder when building its Python environment._
