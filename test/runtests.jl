@@ -1,6 +1,5 @@
-using PySA
-using JuMP
+using PySA: PySA, MOI, QUBODrivers
 
-PySA.test(; examples=true) do model
-    JuMP.set_silent(model)
+QUBODrivers.test(PySA.Optimizer; examples=true) do model
+    MOI.set(model, MOI.Silent(), true)
 end

@@ -2,7 +2,12 @@ module PySA
 
 using PythonCall
 using LinearAlgebra
-using Anneal
+using QUBODrivers:
+    QUBODrivers,
+    MOI,
+    Sample,
+    SampleSet,
+    ising
 
 const np = PythonCall.pynew()
 const pysa = PythonCall.pynew()
@@ -14,11 +19,11 @@ function __init__()
     PythonCall.pycopy!(pysa_sa, pyimport("pysa.sa"))
 end
 
-Anneal.@anew Optimizer begin
-    name       = "PySA"
-    sense      = :min
-    domain     = :spin
-    version    = v"0.1.0" # pysa version
+QUBODrivers.@setup Optimizer begin
+    name = "PySA"
+    sense = :min
+    domain = :spin
+    version = v"0.1.0" # pysa version
     attributes = begin
         NumberOfSweeps["n_sweeps"]::Integer = 32
         NumberOfReplicas["n_replicas"]::Integer = 3
@@ -45,51 +50,53 @@ function _float_type(::Type{T})::String where {T<:AbstractFloat}
     end
 end
 
-function Anneal.sample(sampler::Optimizer{T}) where {T}
-    h, J, α, β = Anneal.ising(sampler, Matrix)
+function QUBODrivers.sample(sampler::Optimizer{T}) where {T}
+    h, J, α, β = ising(sampler, Matrix)
 
     problem = np.array(Symmetric(J + diagm(h)))
 
     solver = pysa_sa.Solver(
-        problem      = problem,
-        problem_type = "ising",
-        float_type   = _float_type(T),
+        problem=problem,
+        problem_type="ising",
+        float_type=_float_type(T),
     )
 
     num_replicas = MOI.get(sampler, PySA.NumberOfReplicas())
 
     result = @timed solver.metropolis_update(
-        num_sweeps          = MOI.get(sampler, PySA.NumberOfSweeps()),
-        num_reads           = MOI.get(sampler, PySA.NumberOfReads()),
-        num_replicas        = num_replicas,
-        update_strategy     = MOI.get(sampler, PySA.UpdateStrategy()),
-        min_temp            = MOI.get(sampler, PySA.MinimumTemperature()),
-        max_temp            = MOI.get(sampler, PySA.MaximumTemperature()),
-        initialize_strategy = MOI.get(sampler, PySA.InitializeStrategy()),
-        recompute_energy    = MOI.get(sampler, PySA.RecomputeEnergy()),
-        sort_output_temps   = MOI.get(sampler, PySA.SortOutputTemps()),
-        parallel            = MOI.get(sampler, PySA.Parallel()), # True by default
-        verbose             = !MOI.get(sampler, MOI.Silent()),
+        num_sweeps=MOI.get(sampler, PySA.NumberOfSweeps()),
+        num_reads=MOI.get(sampler, PySA.NumberOfReads()),
+        num_replicas=num_replicas,
+        update_strategy=MOI.get(sampler, PySA.UpdateStrategy()),
+        min_temp=MOI.get(sampler, PySA.MinimumTemperature()),
+        max_temp=MOI.get(sampler, PySA.MaximumTemperature()),
+        initialize_strategy=MOI.get(sampler, PySA.InitializeStrategy()),
+        recompute_energy=MOI.get(sampler, PySA.RecomputeEnergy()),
+        sort_output_temps=MOI.get(sampler, PySA.SortOutputTemps()),
+        parallel=MOI.get(sampler, PySA.Parallel()), # True by default
+        verbose=!MOI.get(sampler, MOI.Silent()),
     )
 
-    samples = Anneal.Sample{T,Int}[]
+    samples = Vector{Sample{T,Int}}(undef, num_replicas)
 
     for (Ψ, Λ) in result.value[pylist(["states", "energies"])].values
-        for i = 0:(num_replicas-1)
-            ψ = round.(Int, pyconvert.(T, Ψ[i]))
-            λ = α * (pyconvert(T, Λ[i]) + β)
+        for i = 1:num_replicas
+            # NOTE: Python is 0-indexed:
+            ψ = round.(Int, pyconvert.(T, Ψ[i-1]))
+            λ = α * (pyconvert(T, Λ[i-1]) + β)
 
-            push!(samples, Anneal.Sample{T}(ψ, λ))
+            samples[i] = Sample{T}(ψ, λ)
         end
     end
 
     metadata = Dict{String,Any}(
-        "time" => Dict{String,Any}(
+        "origin" => "PySA",
+        "time"   => Dict{String,Any}(
             "effective" => result.time
-        )
+        ),
     )
 
-    return Anneal.SampleSet{T}(samples, metadata)
+    return SampleSet{T}(samples, metadata)
 end
 
 end # module PySA
