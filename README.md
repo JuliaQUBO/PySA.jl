@@ -1,5 +1,6 @@
 # PySA.jl
 
+[![DOI](https://zenodo.org/badge/621844685.svg)](https://zenodo.org/badge/latestdoi/621844685)
 [![QUBODRIVERS](https://img.shields.io/badge/Powered%20by-QUBODrivers.jl-%20%234063d8)](https://github.com/psrenergy/QUBODrivers.jl)
 
 [PySA](https://github.com/nasa/pysa) Simulated Annealing Interface for JuMP
