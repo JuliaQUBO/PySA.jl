@@ -4,6 +4,7 @@ using PythonCall
 using LinearAlgebra
 using QUBODrivers:
     QUBODrivers,
+    QUBOTools,
     MOI,
     Sample,
     SampleSet,
@@ -79,11 +80,12 @@ function QUBODrivers.sample(sampler::Optimizer{T}) where {T}
 
     samples = Vector{Sample{T,Int}}(undef, num_replicas)
 
-    for (Ψ, Λ) in result.value[pylist(["states", "energies"])].values
+    for Ψ in result.value["states"].values
         for i = 1:num_replicas
-            # NOTE: Python is 0-indexed:
+            # NOTE: Python is 0-indexed
             ψ = round.(Int, pyconvert.(T, Ψ[i-1]))
-            λ = α * (pyconvert(T, Λ[i-1]) + β)
+            # Compute value to avoid numeric errors
+            λ = QUBOTools.value(h, J, ψ, α, β) 
 
             samples[i] = Sample{T}(ψ, λ)
         end
