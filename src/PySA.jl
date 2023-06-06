@@ -54,28 +54,33 @@ end
 function QUBODrivers.sample(sampler::Optimizer{T}) where {T}
     h, J, α, β = ising(sampler, Matrix)
 
+    # Since PySA adopts the s = 1 - 2x instead of the s = 2x - 1
+    # convention, the sign of 'h' has to be inverted, as well as
+    # the value for each state variable in 'ψ' below
+    h = -h
+
     problem = np.array(Symmetric(J + diagm(h)))
 
     solver = pysa_sa.Solver(
-        problem=problem,
-        problem_type="ising",
-        float_type=_float_type(T),
+        problem      = problem,
+        problem_type = "ising",
+        float_type   = _float_type(T),
     )
 
     num_replicas = MOI.get(sampler, PySA.NumberOfReplicas())
 
     result = @timed solver.metropolis_update(
-        num_sweeps=MOI.get(sampler, PySA.NumberOfSweeps()),
-        num_reads=MOI.get(sampler, PySA.NumberOfReads()),
-        num_replicas=num_replicas,
-        update_strategy=MOI.get(sampler, PySA.UpdateStrategy()),
-        min_temp=MOI.get(sampler, PySA.MinimumTemperature()),
-        max_temp=MOI.get(sampler, PySA.MaximumTemperature()),
-        initialize_strategy=MOI.get(sampler, PySA.InitializeStrategy()),
-        recompute_energy=MOI.get(sampler, PySA.RecomputeEnergy()),
-        sort_output_temps=MOI.get(sampler, PySA.SortOutputTemps()),
-        parallel=MOI.get(sampler, PySA.Parallel()), # True by default
-        verbose=!MOI.get(sampler, MOI.Silent()),
+        num_sweeps          = MOI.get(sampler, PySA.NumberOfSweeps()),
+        num_reads           = MOI.get(sampler, PySA.NumberOfReads()),
+        num_replicas        = num_replicas,
+        update_strategy     = MOI.get(sampler, PySA.UpdateStrategy()),
+        min_temp            = MOI.get(sampler, PySA.MinimumTemperature()),
+        max_temp            = MOI.get(sampler, PySA.MaximumTemperature()),
+        initialize_strategy = MOI.get(sampler, PySA.InitializeStrategy()),
+        recompute_energy    = MOI.get(sampler, PySA.RecomputeEnergy()),
+        sort_output_temps   = MOI.get(sampler, PySA.SortOutputTemps()),
+        parallel            = MOI.get(sampler, PySA.Parallel()), # True by default
+        verbose             = !MOI.get(sampler, MOI.Silent()),
     )
 
     samples = Vector{Sample{T,Int}}(undef, num_replicas)
@@ -83,8 +88,10 @@ function QUBODrivers.sample(sampler::Optimizer{T}) where {T}
     for Ψ in result.value["states"].values
         for i = 1:num_replicas
             # NOTE: Python is 0-indexed
-            ψ = round.(Int, pyconvert.(T, Ψ[i-1]))
-            # Compute value to avoid numeric errors
+            # NOTE: sign has to be inverted as mentioned above
+            ψ = -round.(Int, pyconvert.(T, Ψ[i-1]))
+            # Compute value instead of retrieving it, to avoid
+            # precision errors
             λ = QUBOTools.value(h, J, ψ, α, β) 
 
             samples[i] = Sample{T}(ψ, λ)
