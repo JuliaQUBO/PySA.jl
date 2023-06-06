@@ -57,9 +57,7 @@ function QUBODrivers.sample(sampler::Optimizer{T}) where {T}
     # Since PySA adopts the s = 1 - 2x instead of the s = 2x - 1
     # convention, the sign of 'h' has to be inverted, as well as
     # the value for each state variable in 'ψ' below
-    h = -h
-
-    problem = np.array(Symmetric(J + diagm(h)))
+    problem = np.array(Symmetric(J - diagm(h)))
 
     solver = pysa_sa.Solver(
         problem      = problem,
