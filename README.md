@@ -7,9 +7,7 @@
 
 ## Installation
 ```julia
-julia> import Pkg
-
-julia> Pkg.add(url="https://github.com/psrenergy/PySA.jl")
+julia> import Pkg; Pkg.add("PySA")
 
 julia> using PySA
 ```
