@@ -2,16 +2,13 @@ module PySA
 
 using PythonCall
 using LinearAlgebra
-using QUBODrivers:
-    QUBODrivers,
-    QUBOTools,
-    MOI,
-    Sample,
-    SampleSet,
-    ising
 
-const np = PythonCall.pynew()
-const pysa = PythonCall.pynew()
+import QUBODrivers
+import QUBOTools
+import MathOptInterface as MOI
+
+const np      = PythonCall.pynew()
+const pysa    = PythonCall.pynew()
 const pysa_sa = PythonCall.pynew()
 
 function __init__()
@@ -21,10 +18,8 @@ function __init__()
 end
 
 QUBODrivers.@setup Optimizer begin
-    name = "PySA"
-    sense = :min
-    domain = :spin
-    version = v"0.1.0" # pysa version
+    name       = "PySA"
+    version    = v"0.1.0" # pysa version
     attributes = begin
         NumberOfSweeps["n_sweeps"]::Integer = 32
         NumberOfReplicas["n_replicas"]::Integer = 3
@@ -52,7 +47,7 @@ function _float_type(::Type{T})::String where {T<:AbstractFloat}
 end
 
 function QUBODrivers.sample(sampler::Optimizer{T}) where {T}
-    h, J, α, β = ising(sampler, Matrix)
+    n, h, J, α, β = QUBOTools.ising(sampler, :dense; sense = :min)
 
     # Since PySA adopts the s = 1 - 2x instead of the s = 2x - 1
     # convention, the sign of 'h' has to be inverted, as well as
@@ -81,18 +76,18 @@ function QUBODrivers.sample(sampler::Optimizer{T}) where {T}
         verbose             = !MOI.get(sampler, MOI.Silent()),
     )
 
-    samples = Vector{Sample{T,Int}}(undef, num_replicas)
+    samples = Vector{QUBOTools.Sample{T,Int}}(undef, num_replicas)
 
     for Ψ in result.value["states"].values
         for i = 1:num_replicas
             # NOTE: Python is 0-indexed
-            # NOTE: sign has to be inverted as mentioned above
+            # NOTE: sign has to be inverted, as mentioned before
             ψ = -round.(Int, pyconvert.(T, Ψ[i-1]))
-            # Compute value instead of retrieving it, to avoid
-            # precision errors
-            λ = QUBOTools.value(h, J, ψ, α, β) 
 
-            samples[i] = Sample{T}(ψ, λ)
+            # Compute value instead of retrieving it, to avoid precision errors
+            λ = QUBOTools.value(ψ, h, J, α, β) 
+
+            samples[i] = QUBOTools.Sample{T,Int}(ψ, λ)
         end
     end
 
@@ -103,7 +98,7 @@ function QUBODrivers.sample(sampler::Optimizer{T}) where {T}
         ),
     )
 
-    return SampleSet{T}(samples, metadata)
+    return QUBOTools.SampleSet{T}(samples, metadata; domain = :spin, sense = :min)
 end
 
 end # module PySA
