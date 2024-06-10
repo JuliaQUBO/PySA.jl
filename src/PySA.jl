@@ -3,8 +3,9 @@ module PySA
 using PythonCall
 using LinearAlgebra
 
-import QUBODrivers
-import QUBOTools
+import QUBO
+QUBODrivers = QUBO.QUBODrivers
+QUBOTools = QUBO.QUBOTools
 import MathOptInterface as MOI
 
 const np      = PythonCall.pynew()
@@ -82,7 +83,7 @@ function QUBODrivers.sample(sampler::Optimizer{T}) where {T}
         for i = 1:num_replicas
             # NOTE: Python is 0-indexed
             # NOTE: sign has to be inverted, as mentioned before
-            ψ = -round.(Int, pyconvert.(T, Ψ[i-1]))
+            ψ = -round.(Int, pyconvert.(T, [var for var in Ψ[i-1]]))
 
             # Compute value instead of retrieving it, to avoid precision errors
             λ = QUBOTools.value(ψ, h, J, α, β) 
