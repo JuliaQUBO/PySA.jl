@@ -32,7 +32,6 @@ optimize!(model)
 for i = 1:result_count(model)
     xi = value.(x; result = i)
     yi = objective_value(model; result = i)
-
     println("[$i] f($(xi)) = $(yi)")
 end
 ```
