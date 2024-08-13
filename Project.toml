@@ -1,7 +1,7 @@
 name = "PySA"
 uuid = "46b73cfa-376a-48ee-8926-0c45ac3f7830"
 authors = ["pedromxavier <pedromxavier@psr-inc.com>"]
-version = "0.3.0"
+version = "0.3.1"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
