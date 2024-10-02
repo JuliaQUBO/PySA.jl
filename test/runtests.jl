@@ -1,4 +1,5 @@
-using PySA: PySA, MOI, QUBO.QUBODrivers
+import PySA
+import PySA: MOI, QUBODrivers
 
 QUBODrivers.test(PySA.Optimizer; examples=true) do model
     MOI.set(model, MOI.Silent(), true)

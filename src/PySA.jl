@@ -3,9 +3,8 @@ module PySA
 using PythonCall
 using LinearAlgebra
 
-import QUBO
-QUBODrivers = QUBO.QUBODrivers
-QUBOTools = QUBO.QUBOTools
+import QUBODrivers
+import QUBOTools
 import MathOptInterface as MOI
 
 const np      = PythonCall.pynew()
