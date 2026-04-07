@@ -1,7 +1,7 @@
 name = "PySA"
 uuid = "46b73cfa-376a-48ee-8926-0c45ac3f7830"
 authors = ["pedromxavier <mail@pedro.ϵλ>"]
-version = "0.3.2"
+version = "0.3.3"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
@@ -14,5 +14,5 @@ QUBOTools = "60eb5b62-0a39-4ddc-84c5-97d2adff9319"
 MathOptInterface = "1"
 PythonCall       = "0.9.23"
 QUBODrivers      = "0.3"
-QUBOTools        = "0.10"
+QUBOTools        = "0.10, 0.11"
 julia            = "1.9"
