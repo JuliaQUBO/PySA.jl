@@ -1,6 +1,6 @@
 name = "PySA"
 uuid = "46b73cfa-376a-48ee-8926-0c45ac3f7830"
-authors = ["pedromxavier <mail@pedro.ϵλ>"]
+authors = ["pedromxavier <mail@pedro.ϵλ>", "David E. Bernal Neira <dbernaln@purdue.edu>"]
 version = "0.3.4"
 
 [deps]
