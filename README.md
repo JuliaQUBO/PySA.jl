@@ -1,5 +1,6 @@
 # PySA.jl
 
+[![CI](https://github.com/JuliaQUBO/PySA.jl/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/JuliaQUBO/PySA.jl/actions/workflows/ci.yml)
 [![DOI](https://zenodo.org/badge/621844685.svg)](https://zenodo.org/badge/latestdoi/621844685)
 [![QUBODRIVERS](https://img.shields.io/badge/Powered%20by-QUBODrivers.jl-%20%234063d8)](https://github.com/JuliaQUBO/QUBODrivers.jl)
 
