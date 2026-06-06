@@ -31,11 +31,11 @@ end
 @testset "README JuMP workflow" begin
     model = JuMP.Model(PySA.Optimizer)
     JuMP.set_attribute(model, MOI.Silent(), true)
-    JuMP.set_optimizer_attribute(model, PySA.NumberOfReads(), 4)
-    JuMP.set_optimizer_attribute(model, PySA.NumberOfSweeps(), 8)
-    JuMP.set_optimizer_attribute(model, PySA.NumberOfReplicas(), 2)
-    JuMP.set_optimizer_attribute(model, PySA.MinimumTemperature(), 0.5)
-    JuMP.set_optimizer_attribute(model, PySA.MaximumTemperature(), 2.5)
+    JuMP.set_attribute(model, PySA.NumberOfReads(), 4)
+    JuMP.set_attribute(model, PySA.NumberOfSweeps(), 8)
+    JuMP.set_attribute(model, PySA.NumberOfReplicas(), 2)
+    JuMP.set_attribute(model, PySA.MinimumTemperature(), 0.5)
+    JuMP.set_attribute(model, PySA.MaximumTemperature(), 2.5)
 
     n = 3
     Q = [
@@ -50,7 +50,9 @@ end
     JuMP.optimize!(model)
 
     @test JuMP.result_count(model) >= 1
-    @test isfinite(JuMP.objective_value(model; result = 1))
+    objective = JuMP.objective_value(model; result = 1)
+    @test isfinite(objective)
+    @test objective <= 0
 
     x_result = JuMP.value.(x; result = 1)
     @test length(x_result) == n
