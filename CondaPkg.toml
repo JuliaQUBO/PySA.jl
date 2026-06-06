@@ -5,4 +5,4 @@ python = ">=3.8,<=3.11"
 
 [pip.deps]
 numpy = ">=1.20.0"
-pysa  = "@ git+https://github.com/nasa/pysa"
+pysa  = "@ git+https://github.com/nasa/pysa@v0.1.0"
