@@ -1,5 +1,6 @@
 import PySA
 import PySA: MOI, QUBODrivers
+import JuMP
 import TOML
 using Test
 
@@ -25,6 +26,37 @@ using Test
     if pysa_pin !== nothing && pysa_version !== nothing
         @test pysa_version.captures[1] == pysa_pin.captures[1]
     end
+end
+
+@testset "README JuMP workflow" begin
+    model = JuMP.Model(PySA.Optimizer)
+    JuMP.set_attribute(model, MOI.Silent(), true)
+    JuMP.set_attribute(model, PySA.NumberOfReads(), 4)
+    JuMP.set_attribute(model, PySA.NumberOfSweeps(), 8)
+    JuMP.set_attribute(model, PySA.NumberOfReplicas(), 2)
+    JuMP.set_attribute(model, PySA.MinimumTemperature(), 0.5)
+    JuMP.set_attribute(model, PySA.MaximumTemperature(), 2.5)
+
+    n = 3
+    Q = [
+        -1  2  2
+         2 -1  2
+         2  2 -1
+    ]
+
+    JuMP.@variable(model, x[1:n], Bin)
+    JuMP.@objective(model, Min, x' * Q * x)
+
+    JuMP.optimize!(model)
+
+    @test JuMP.result_count(model) >= 1
+    objective = JuMP.objective_value(model; result = 1)
+    @test isfinite(objective)
+    @test objective <= 0
+
+    x_result = JuMP.value.(x; result = 1)
+    @test length(x_result) == n
+    @test all(isapprox(v, 0; atol = 1e-6) || isapprox(v, 1; atol = 1e-6) for v in x_result)
 end
 
 QUBODrivers.test(PySA.Optimizer; examples=true) do model
