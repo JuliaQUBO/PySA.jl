@@ -16,6 +16,21 @@ using Test
     @test "0.5" in qubodrivers_compat
     @test occursin("https://github.com/JuliaQUBO/QUBODrivers.jl", readme)
     @test !occursin("https://github.com/psrenergy/QUBODrivers.jl", readme)
+    @test occursin("## Solver options", readme)
+    for attribute in (
+        "PySA.NumberOfSweeps()",
+        "PySA.NumberOfReplicas()",
+        "PySA.NumberOfReads()",
+        "PySA.MinimumTemperature()",
+        "PySA.MaximumTemperature()",
+        "PySA.UpdateStrategy()",
+        "PySA.InitializeStrategy()",
+        "PySA.RecomputeEnergy()",
+        "PySA.SortOutputTemps()",
+        "PySA.Parallel()",
+    )
+        @test occursin(attribute, readme)
+    end
     @test pysa_pin !== nothing
     @test pysa_version !== nothing
 

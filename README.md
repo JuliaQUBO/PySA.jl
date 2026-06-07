@@ -19,6 +19,9 @@ using JuMP
 using PySA
 
 model = Model(PySA.Optimizer)
+set_silent(model)
+set_attribute(model, PySA.NumberOfReads(), 20)
+set_attribute(model, PySA.NumberOfSweeps(), 64)
 
 n = 3
 Q = [ -1  2  2
@@ -36,6 +39,26 @@ for i = 1:result_count(model)
     println("[$i] f($(xi)) = $(yi)")
 end
 ```
+
+## Solver options
+
+PySA.jl exposes the main PySA simulated annealing options as JuMP optimizer attributes:
+
+| Attribute | PySA option | Default |
+| --- | --- | --- |
+| `PySA.NumberOfSweeps()` | `n_sweeps` | `32` |
+| `PySA.NumberOfReplicas()` | `n_replicas` | `3` |
+| `PySA.NumberOfReads()` | `n_reads` | `10` |
+| `PySA.MinimumTemperature()` | `min_temp` | `1.0` |
+| `PySA.MaximumTemperature()` | `max_temp` | `3.5` |
+| `PySA.UpdateStrategy()` | `update_strategy` | `"sequential"` |
+| `PySA.InitializeStrategy()` | `initialize_strategy` | `"ones"` |
+| `PySA.RecomputeEnergy()` | `recompute_energy` | `false` |
+| `PySA.SortOutputTemps()` | `sort_output_temps` | `true` |
+| `PySA.Parallel()` | `parallel` | `true` |
+
+Use `set_attribute(model, attribute, value)` to override these values before calling `optimize!`.
+Use `set_silent(model)` to disable PySA solver output.
 
 **Note**: _The PySA wrapper for Julia is not officially supported by the National Aeronautics and Space Administration. If you are interested in official support for Julia from NASA, let them know!_
 
