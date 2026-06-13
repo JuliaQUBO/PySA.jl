@@ -22,6 +22,7 @@ model = Model(PySA.Optimizer)
 set_silent(model)
 set_attribute(model, PySA.NumberOfReads(), 20)
 set_attribute(model, PySA.NumberOfSweeps(), 64)
+set_attribute(model, PySA.RandomSeed(), 1234)
 
 n = 3
 Q = [ -1  2  2
@@ -42,23 +43,28 @@ end
 
 ## Solver options
 
-PySA.jl exposes the main PySA simulated annealing options as JuMP optimizer attributes:
+PySA.jl exposes the main PySA simulated annealing options as JuMP optimizer attributes.
+Each option can also be set with `MOI.RawOptimizerAttribute` using the raw key.
+Legacy `n_*` raw keys remain supported for compatibility.
 
-| Attribute | PySA option | Default |
-| --- | --- | --- |
-| `PySA.NumberOfSweeps()` | `n_sweeps` | `32` |
-| `PySA.NumberOfReplicas()` | `n_replicas` | `3` |
-| `PySA.NumberOfReads()` | `n_reads` | `10` |
-| `PySA.MinimumTemperature()` | `min_temp` | `1.0` |
-| `PySA.MaximumTemperature()` | `max_temp` | `3.5` |
-| `PySA.UpdateStrategy()` | `update_strategy` | `"sequential"` |
-| `PySA.InitializeStrategy()` | `initialize_strategy` | `"ones"` |
-| `PySA.RecomputeEnergy()` | `recompute_energy` | `false` |
-| `PySA.SortOutputTemps()` | `sort_output_temps` | `true` |
-| `PySA.Parallel()` | `parallel` | `true` |
+| Attribute | Raw key | Alias raw key | Default |
+| --- | --- | --- | --- |
+| `PySA.NumberOfSweeps()` | `num_sweeps` | `n_sweeps` | `32` |
+| `PySA.NumberOfReplicas()` | `num_replicas` | `n_replicas` | `3` |
+| `PySA.NumberOfReads()` | `num_reads` | `n_reads` | `10` |
+| `PySA.FinalNumberOfReads()` | `final_num_reads` | - | `num_reads` |
+| `PySA.RandomSeed()` | `seed` | - | `nothing` |
+| `PySA.MinimumTemperature()` | `min_temp` | `minimum_temperature` | `1.0` |
+| `PySA.MaximumTemperature()` | `max_temp` | `maximum_temperature` | `3.5` |
+| `PySA.UpdateStrategy()` | `update_strategy` | - | `"sequential"` |
+| `PySA.InitializeStrategy()` | `initialize_strategy` | - | `"ones"` |
+| `PySA.RecomputeEnergy()` | `recompute_energy` | - | `false` |
+| `PySA.SortOutputTemps()` | `sort_output_temps` | - | `true` |
+| `PySA.Parallel()` | `parallel` | - | `true` |
 
 Use `set_attribute(model, attribute, value)` to override these values before calling `optimize!`.
 Use `set_silent(model)` to disable PySA solver output.
+When `PySA.RandomSeed()` is set, PySA.jl runs the backend with `parallel=false` so NumPy and Numba random streams are reproducible.
 
 **Note**: _The PySA wrapper for Julia is not officially supported by the National Aeronautics and Space Administration. If you are interested in official support for Julia from NASA, let them know!_
 
