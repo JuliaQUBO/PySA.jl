@@ -14,7 +14,7 @@ using Test
     pysa_version = match(r"(?m)^\s*version\s*=\s*v\"(\d+\.\d+\.\d+)\"\s*(?:#.*)?$", source)
 
     @test project["compat"]["QUBODrivers"] == "0.6.1"
-    @test project["compat"]["QUBOTools"] == "0.13"
+    @test project["compat"]["QUBOTools"] == "0.13, 0.14"
     @test !("0.5" in qubodrivers_compat)
     @test occursin("https://github.com/JuliaQUBO/QUBODrivers.jl", readme)
     @test !occursin("https://github.com/psrenergy/QUBODrivers.jl", readme)
