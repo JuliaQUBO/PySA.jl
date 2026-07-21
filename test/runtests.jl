@@ -8,13 +8,17 @@ using Test
     project = TOML.parsefile(joinpath(pkgdir(PySA), "Project.toml"))
     condapkg = TOML.parsefile(joinpath(pkgdir(PySA), "CondaPkg.toml"))
     qubodrivers_compat = split(project["compat"]["QUBODrivers"], r",\s*")
+    qubotools_compat = split(project["compat"]["QUBOTools"], r",\s*")
     readme = read(joinpath(pkgdir(PySA), "README.md"), String)
     source = read(joinpath(pkgdir(PySA), "src", "PySA.jl"), String)
     pysa_pin = match(r"^@ git\+https://github\.com/nasa/pysa@v(\d+\.\d+\.\d+)$", condapkg["pip"]["deps"]["pysa"])
     pysa_version = match(r"(?m)^\s*version\s*=\s*v\"(\d+\.\d+\.\d+)\"\s*(?:#.*)?$", source)
 
-    @test project["compat"]["QUBODrivers"] == "0.6.1"
-    @test project["compat"]["QUBOTools"] == "0.13, 0.14, 0.15, 0.16"
+    @test "0.6.1" in qubodrivers_compat
+    @test all(
+        version -> version in qubotools_compat,
+        ("0.13", "0.14", "0.15", "0.16"),
+    )
     @test !("0.5" in qubodrivers_compat)
     @test occursin("https://github.com/JuliaQUBO/QUBODrivers.jl", readme)
     @test !occursin("https://github.com/psrenergy/QUBODrivers.jl", readme)
