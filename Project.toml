@@ -11,6 +11,7 @@ QUBODrivers = "a3f166f7-2cd3-47b6-9e1e-6fbfe0449eb0"
 QUBOTools = "60eb5b62-0a39-4ddc-84c5-97d2adff9319"
 
 [compat]
+LinearAlgebra = "1.10"
 MathOptInterface = "1"
 PythonCall       = "0.9.23"
 QUBODrivers      = "0.6.1"
