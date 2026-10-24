@@ -1,7 +1,7 @@
 # PySA.jl
 
 [![CI](https://github.com/JuliaQUBO/PySA.jl/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/JuliaQUBO/PySA.jl/actions/workflows/ci.yml)
-[![DOI](https://zenodo.org/badge/621844685.svg)](https://zenodo.org/badge/latestdoi/621844685)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7951574.svg)](https://doi.org/10.5281/zenodo.7951574)
 [![QUBODRIVERS](https://img.shields.io/badge/Powered%20by-QUBODrivers.jl-%20%234063d8)](https://github.com/JuliaQUBO/QUBODrivers.jl)
 
 [PySA](https://github.com/nasa/pysa) Simulated Annealing Interface for JuMP
@@ -65,6 +65,30 @@ Legacy `n_*` raw keys remain supported for compatibility.
 Use `set_attribute(model, attribute, value)` to override these values before calling `optimize!`.
 Use `set_silent(model)` to disable PySA solver output.
 When `PySA.RandomSeed()` is set, PySA.jl runs the backend with `parallel=false` so NumPy and Numba random streams are reproducible.
+
+## Citation
+
+For work that uses this Julia wrapper, cite `PySA.jl` with its
+[Zenodo concept DOI](https://doi.org/10.5281/zenodo.7951574). The concept DOI is
+the evergreen software identifier and resolves to the latest archived wrapper
+release. Citation metadata is available in [`CITATION.cff`](CITATION.cff).
+
+For exact-version reproducibility, cite the Zenodo version DOI recorded in that
+GitHub release and Zenodo record. For example, the latest archived Zenodo
+record under this concept is
+[10.5281/zenodo.19463601](https://doi.org/10.5281/zenodo.19463601) (`v0.3.3`).
+
+This wrapper depends on the separately maintained upstream
+[NASA PySA project](https://github.com/nasa/pysa). When using its simulated
+annealing solver, also cite the upstream [`nasa/pysa`](https://github.com/nasa/pysa)
+software alongside this wrapper. The `PySA.jl` DOI identifies this Julia
+wrapper; it does not identify or archive upstream NASA PySA.
+
+For general discussion or use of the JuliaQUBO ecosystem, cite the
+[QUBO.jl ecosystem article](https://doi.org/10.1080/10556788.2026.2702926).
+
+Release-time archive verification steps are documented in
+[`.github/RELEASE_CHECKLIST.md`](.github/RELEASE_CHECKLIST.md).
 
 **Note**: _The PySA wrapper for Julia is not officially supported by the National Aeronautics and Space Administration. If you are interested in official support for Julia from NASA, let them know!_
 

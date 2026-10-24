@@ -1,0 +1,72 @@
+cff-version: 1.2.0
+message: >-
+  If you use PySA.jl, cite this wrapper using this metadata. Also cite the
+  upstream NASA PySA solver when using its simulated annealing implementation,
+  as described in the README.
+title: "PySA.jl"
+type: software
+authors:
+  - family-names: "Maciel Xavier"
+    given-names: "Pedro"
+    affiliation: "Purdue University"
+    orcid: "https://orcid.org/0000-0002-4678-4942"
+  - family-names: "Bernal Neira"
+    given-names: "David E."
+    affiliation: "Purdue University"
+    orcid: "https://orcid.org/0000-0002-8308-5016"
+abstract: >-
+  A JuMP and QUBODrivers interface for the NASA PySA simulated annealing
+  solver.
+repository-code: "https://github.com/JuliaQUBO/PySA.jl"
+license: MIT
+version: "0.4.2"
+date-released: 2026-06-26
+doi: "10.5281/zenodo.7951574"
+keywords:
+  - Julia
+  - simulated annealing
+  - quadratic unconstrained binary optimization
+  - Ising model
+  - QUBO
+references:
+  - type: software
+    title: "PySA: Fast Simulated Annealing in Native Python"
+    authors:
+      - family-names: "Mandrà"
+        given-names: "Salvatore"
+      - family-names: "Munoz-Bauza"
+        given-names: "Humberto"
+      - family-names: "Akbari Asanjan"
+        given-names: "Ata"
+      - family-names: "Brady"
+        given-names: "Lucas"
+      - family-names: "Lott"
+        given-names: "Aaron"
+      - family-names: "Bernal Neira"
+        given-names: "David E."
+    year: 2023
+    repository-code: "https://github.com/nasa/pysa"
+    scope: >-
+      Cite this upstream project when using the underlying NASA PySA solver.
+  - type: article
+    title: >-
+      QUBO.jl: A Julia Ecosystem for Quadratic Unconstrained Binary
+      Optimization
+    authors:
+      - family-names: "Maciel Xavier"
+        given-names: "Pedro"
+      - family-names: "Ripper"
+        given-names: "Pedro"
+      - family-names: "Andrade"
+        given-names: "Tiago"
+      - family-names: "Dias Garcia"
+        given-names: "Joaquim"
+      - family-names: "Maculan"
+        given-names: "Nelson"
+      - family-names: "Bernal Neira"
+        given-names: "David E."
+    journal: "Optimization Methods and Software"
+    year: 2026
+    doi: "10.1080/10556788.2026.2702926"
+    scope: >-
+      Cite this work for general use of the JuliaQUBO ecosystem.
