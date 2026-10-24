@@ -137,3 +137,5 @@ QUBODrivers.test(PySA.Optimizer; examples=true, benchmark_conformance=true) do m
     MOI.set(model, PySA.NumberOfSweeps(), 8)
     MOI.set(model, PySA.NumberOfReplicas(), 2)
 end
+
+include("citation.jl")
