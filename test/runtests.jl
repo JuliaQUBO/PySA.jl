@@ -11,7 +11,10 @@ using Test
     qubotools_compat = split(project["compat"]["QUBOTools"], r",\s*")
     readme = read(joinpath(pkgdir(PySA), "README.md"), String)
     source = read(joinpath(pkgdir(PySA), "src", "PySA.jl"), String)
-    pysa_pin = match(r"^@ git\+https://github\.com/nasa/pysa@v(\d+\.\d+\.\d+)$", condapkg["pip"]["deps"]["pysa"])
+    pysa_pin = match(
+        r"^@ (?:git\+https://github\.com/nasa/pysa@v|https://github\.com/nasa/pysa/archive/refs/tags/v)(\d+\.\d+\.\d+)(?:\.tar\.gz)?$",
+        condapkg["pip"]["deps"]["pysa"],
+    )
     pysa_version = match(r"(?m)^\s*version\s*=\s*v\"(\d+\.\d+\.\d+)\"\s*(?:#.*)?$", source)
 
     @test "0.6.1" in qubodrivers_compat
