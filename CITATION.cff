@@ -19,8 +19,8 @@ abstract: >-
   solver.
 repository-code: "https://github.com/JuliaQUBO/PySA.jl"
 license: MIT
-version: "0.4.2"
-date-released: 2026-06-26
+version: "0.4.3"
+date-released: 2026-10-25
 doi: "10.5281/zenodo.7951574"
 keywords:
   - Julia
