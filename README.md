@@ -76,7 +76,7 @@ release. Citation metadata is available in [`CITATION.cff`](CITATION.cff).
 For exact-version reproducibility, cite the Zenodo version DOI recorded in that
 GitHub release and Zenodo record. For example, the latest archived Zenodo
 record under this concept is
-[10.5281/zenodo.19463601](https://doi.org/10.5281/zenodo.19463601) (`v0.3.3`).
+[10.5281/zenodo.23653067](https://doi.org/10.5281/zenodo.23653067) (`v0.4.3`).
 
 This wrapper depends on the separately maintained upstream
 [NASA PySA project](https://github.com/nasa/pysa). When using its simulated
