@@ -42,6 +42,7 @@ using Test
     )
         @test occursin(attribute, readme)
     end
+    @test condapkg["deps"]["python"] == ">=3.11,<=3.11"
     @test pysa_pin !== nothing
     @test pysa_version !== nothing
 
